@@ -11,7 +11,7 @@ importlib.reload(utility.test_functions)
 from utility.test_functions import *
 
 
-def produce_department_breakdown_data(dataset_one_path, dataset_two_path, spark_session):
+def produce_data(dataset_one_path, dataset_two_path, spark_session):
 
     dataset_one = spark_session.read.csv(dataset_one_path, header=True, inferSchema=True)
     dataset_two = spark_session.read.csv(dataset_two_path, header=True, inferSchema=True)
@@ -32,29 +32,29 @@ def produce_department_breakdown_data(dataset_one_path, dataset_two_path, spark_
                             .withColumn('total_sales_amount', F.format_number(F.col('total_sales_amount'), 2))
                             )
 
-    department_breakdown_data = (calls_per_department.join(sales_per_department,
+    produced_data = (calls_per_department.join(sales_per_department,
                                                            [calls_per_department.area == sales_per_department.area],
                                                            'left')
                                  .drop(sales_per_department.area))
 
-    return department_breakdown_data
+    return produced_data
 
 
-def main(dataset_one_path = r'../data/dataset_one.csv', dataset_two_path = r'../data/dataset_two.csv'):
+def main(dataset_one_path = r'../data/dataset_one.csv', dataset_two_path = r'../data/dataset_two.csv',output_directory='department_breakdown'):
 
     spark = SparkSession.builder.getOrCreate()
 
     try:
 
-        department_breakdown_data = produce_department_breakdown_data(dataset_one_path, dataset_two_path, spark_session=spark)
+        produced_data = produce_data(dataset_one_path, dataset_two_path, spark_session=spark)
 
-        if test_for_non_logical_values(department_breakdown_data,column='total_sales_amount',condition='total_sales_amount<0'):
+        if test_for_non_logical_values(produced_data,column='total_sales_amount',condition='total_sales_amount<0'):
             raise Exception("it_data:: Negative values were identified in the dataframe.")
 
-        if test_for_duplicate_entries(department_breakdown_data,identity_columns='area'):
+        if test_for_duplicate_entries(produced_data,identity_columns='area'):
             raise Exception("it_data:: Duplicate entries were identified in the dataframe.")
 
-        department_breakdown_data.repartition(1).write.mode('overwrite').csv(path='../output/department_breakdown', header=True)
+        produced_data.repartition(1).write.mode('overwrite').csv(path=f'../output/{output_directory}', header=True)
 
     finally:
 

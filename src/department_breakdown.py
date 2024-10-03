@@ -11,7 +11,7 @@ importlib.reload(utility.test_functions)
 from utility.test_functions import *
 
 
-def produce_marketing_address_data(dataset_one_path, dataset_two_path, spark_session):
+def produce_data(dataset_one_path, dataset_two_path, spark_session):
 
     dataset_one = spark_session.read.csv(dataset_one_path, header=True, inferSchema=True)
     dataset_two = spark_session.read.csv(dataset_two_path, header=True, inferSchema=True)
@@ -22,7 +22,7 @@ def produce_marketing_address_data(dataset_one_path, dataset_two_path, spark_ses
     # [A-Z]{2}: Two uppercase letters
     zip_code_regex = r"(\d{4}\s?[A-Z]{2})"
 
-    marketing_address_data = (dataset_one.filter(F.col('area') == 'Marketing').select('id').join(
+    produced_data = (dataset_one.filter(F.col('area') == 'Marketing').select('id').join(
         dataset_two.select('id', 'address'),
         [dataset_one.id == dataset_two.id],
         "left"
@@ -30,24 +30,22 @@ def produce_marketing_address_data(dataset_one_path, dataset_two_path, spark_ses
 
     # spark.stop()
 
-    return marketing_address_data
+    return produced_data
 
 
 
-def main(dataset_one_path = r'../data/dataset_one.csv', dataset_two_path = r'../data/dataset_two.csv'):
+def main(dataset_one_path = r'../data/dataset_one.csv', dataset_two_path = r'../data/dataset_two.csv', output_directory='department_breakdown'):
 
     spark = SparkSession.builder.getOrCreate()
 
     try:
 
-        marketing_address_data = produce_marketing_address_data(dataset_one_path, dataset_two_path, spark_session=spark)
+        produced_data = produce_data(dataset_one_path, dataset_two_path, spark_session=spark)
 
-        if test_for_duplicate_entries(marketing_address_data,identity_columns='id'):
+        if test_for_duplicate_entries(produced_data,identity_columns='id'):
             raise Exception("it_data:: Duplicate entries were identified in the dataframe.")
 
-        marketing_address_data.show()
-
-        marketing_address_data.repartition(1).write.mode('overwrite').csv(path='../output/marketing_address_info', header=True)
+        produced_data.repartition(1).write.mode('overwrite').csv(path=f'../output/{output_directory}', header=True)
 
 
 
