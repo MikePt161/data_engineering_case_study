@@ -27,7 +27,11 @@ def produce_data(dataset_one_path, dataset_two_path, spark_session):
     return produced_data
 
 
-def main(dataset_one_path = r'../data/dataset_one.csv', dataset_two_path = r'../data/dataset_two.csv', output_directory='it_data'):
+def main(dataset_one_path = r'../data/dataset_one.csv',
+         dataset_two_path = r'../data/dataset_two.csv',
+         output_directory='it_data',
+         write_results=False
+         ):
 
     spark = SparkSession.builder.getOrCreate()
 
@@ -36,12 +40,13 @@ def main(dataset_one_path = r'../data/dataset_one.csv', dataset_two_path = r'../
         produced_data = produce_data(dataset_one_path, dataset_two_path, spark_session=spark)
 
         if test_for_non_logical_values(produced_data,column='sales_amount',condition='sales_amount<0'):
-            raise Exception("it_data:: Negative values were identified in the dataframe.")
+            raise Exception(f"{output_directory}::Negative values were identified in the dataframe.")
 
-        if test_for_duplicate_entries(produced_data,identity_columns='id'):
-            raise Exception("it_data:: Duplicate entries were identified in the dataframe.")
+        if test_for_duplicate_entries(produced_data,identity_columns=['id']):
+            raise Exception(f"{output_directory}:: Duplicate entries were identified in the dataframe.")
 
-        produced_data.repartition(1).write.mode('overwrite').csv(path=f'../output/{output_directory}', header=True)
+        if write_results:
+            produced_data.repartition(1).write.mode('overwrite').csv(path=f'../output/{output_directory}', header=True)
 
     finally:
 
