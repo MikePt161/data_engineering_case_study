@@ -23,6 +23,31 @@ dataset_one.show()
 dataset_two.show()
 dataset_three.show()
 
+
+
+top_n = 1
+produced_data = dataset_three.groupBy('caller_id','country').agg(F.sum('quantity').alias('total_products_sold'))
+
+# # Define a window function over each department, descending by total_products_sold
+window_spec = Window.partitionBy("country").orderBy(F.col("total_products_sold").desc())
+#
+# # Apply row_number() to assign ranks within each partition
+produced_data = produced_data.withColumn("rank", F.row_number().over(window_spec))
+#
+# # Filter for top_n in each partition
+produced_data = produced_data.filter(F.col("rank") <= top_n).drop(F.col('rank'))
+
+# Retrieve caller name and sales amount
+produced_data = produced_data.join(dataset_two.select('id','name','sales_amount'),
+                   [produced_data.caller_id==dataset_two.id],
+                   'inner').drop(dataset_two.id)
+
+produced_data.show()
+
+
+
+produced_data.show()
+
 # top_n = 3
 #
 # # Match caller id department with products sold within the Netherlands
