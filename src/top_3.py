@@ -92,7 +92,7 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
 
                                      )
 
-        if test_for_non_logical_values(produced_data,column='percentage_of_successful_calls',condition=f'percentage_of_successful_calls<{top_n}'):
+        if test_for_non_logical_values(produced_data,column='percentage_of_successful_calls',condition=f'percentage_of_successful_calls<{percentage_threshold}'):
             raise Exception(f"{output_directory}:: Negative values were identified in the dataframe.")
 
         if test_for_duplicate_entries(produced_data,identity_columns=['id','area']):
