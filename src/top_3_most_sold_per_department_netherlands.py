@@ -18,10 +18,10 @@ def produce_data(spark_session,
     """
     Produces a csv listing the top selling products per department.
     :param spark_session: Spark builder object to handle stopping outside function.
-    :str dataset_one_path: Path to dataset_one.csv
-    :str dataset_two_path: Path to dataset_one.csv
-    :str dataset_three_path: Path to dataset_one.csv
-    :int top_n: Return top_n best solod products per department (ex. top_n = 3 will return the top 3 selling products and so on).
+    :param dataset_one_path: Path to dataset_one.csv
+    :param dataset_two_path: Path to dataset_one.csv
+    :param dataset_three_path: Path to dataset_one.csv
+    :param top_n: Return top_n best solod products per department (ex. top_n = 3 will return the top 3 selling products and so on).
     :return: produced_data: Spark DataFrame that will be written to a csv.
     """
 
@@ -51,7 +51,15 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
          dataset_three_path: str = r'../data/dataset_three.csv',
          output_directory:str = 'top_3_most_sold_per_department_netherlands',
          top_n: int = 3,
-         write_results:bool = True):
+         write_results:bool = False):
+    """
+    :param dataset_one_path: Path pointing to dataset one
+    :param dataset_three_path: Path pointing to dataset three
+    :param output_directory: Path pointing to data saving directory
+    :param top_n: Specified top_n products that will be returned per
+    :param write_results: Boolean True/False, whether to write data or not
+    :return: Writes csv in the output_directory if write_results is specified as True
+    """
 
     spark = SparkSession.builder.getOrCreate()
 
