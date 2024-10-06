@@ -46,8 +46,8 @@ def produce_data(dataset_one_path:str, dataset_two_path:str, spark_session):
 
 def main(dataset_one_path:str = r'../data/dataset_one.csv',
          dataset_two_path:str = r'../data/dataset_two.csv',
-         output_directory:str ='department_breakdown',
-         write_results:bool = False
+         output_directory:str ='marketing_address_info',
+         write_results:bool = True
          ):
     """
     Main function that writes data in the output directory, if checks succeed

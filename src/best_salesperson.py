@@ -53,7 +53,7 @@ def main(dataset_two_path: str = r'../data/dataset_two.csv',
          dataset_three_path: str = r'../data/dataset_three.csv',
          output_directory:str = 'best_salesperson',
          top_n: int = 1,
-         write_results:bool = False):
+         write_results:bool = True):
     """
     Main function that writes data in the output directory, if checks succeed
     :param dataset_two_path: Path pointing to dataset_two.csv

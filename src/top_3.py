@@ -78,7 +78,7 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
          top_n: int = 3,
          percentage_threshold: float = 75,
          output_directory:str = 'top_3',
-         write_results:bool = False):
+         write_results:bool = True):
     """
     :param dataset_one_path: Path pointing to dataset_one.csv
     :param dataset_two_path: Path pointing to dataset_two.csv

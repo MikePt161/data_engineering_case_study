@@ -53,7 +53,7 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
          dataset_three_path: str = r'../data/dataset_three.csv',
          output_directory:str = 'top_3_most_sold_per_department_netherlands',
          top_n: int = 3,
-         write_results:bool = False):
+         write_results:bool = True):
     """
     :param dataset_one_path: Path pointing to dataset one
     :param dataset_three_path: Path pointing to dataset three

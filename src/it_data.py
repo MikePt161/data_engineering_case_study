@@ -40,7 +40,7 @@ def produce_data(dataset_one_path, dataset_two_path, spark_session):
 def main(dataset_one_path = r'../data/dataset_one.csv',
          dataset_two_path = r'../data/dataset_two.csv',
          output_directory='it_data',
-         write_results=False
+         write_results=True
          ):
     """
     :param dataset_one_path: Path to dataset_one.csv
