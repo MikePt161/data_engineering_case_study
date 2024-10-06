@@ -3,6 +3,8 @@ import pyspark.sql.functions as F
 from pyspark import SparkConf
 import chispa
 from pyspark.sql.functions import column
+import logging
+import logging.config
 
 import importlib
 
@@ -77,6 +79,22 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
          percentage_threshold: float = 75,
          output_directory:str = 'top_3',
          write_results:bool = False):
+    """
+    :param dataset_one_path: Path pointing to dataset_one.csv
+    :param dataset_two_path: Path pointing to dataset_two.csv
+    :param dataset_three_path: Path pointing to dataset_three.csv
+    :param top_n: Specified top_n products that will be returned
+    :param percentage_threshold: Lower threshold of successful calls that a caller should have made. Here 75 translates to 75%.
+    to be considered for a bonus.
+    :param output_directory: Name of data saving directory within output/
+    :param write_results: Boolean True/False, whether to write data or not
+    :return: Writes csv in the output_directory if write_results is specified as True
+    """
+
+    # Configure the logging system
+    logging.config.fileConfig(r'../utility/logconfig.ini')
+
+    logging.debug(f'{output_directory} : Starting log process')
 
     spark = SparkSession.builder.getOrCreate()
 
@@ -91,19 +109,28 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
             percentage_threshold=percentage_threshold,
 
                                      )
+        logging.debug(f'{output_directory} : Successfuly extracted data')
 
         if test_for_non_logical_values(produced_data,column='percentage_of_successful_calls',condition=f'percentage_of_successful_calls<{percentage_threshold}'):
-            raise Exception(f"{output_directory}:: Negative values were identified in the dataframe.")
+            display_message = f"{output_directory}:: Negative values were identified in the dataframe."
+            logging.error(display_message)
+            raise Exception(display_message)
 
         if test_for_duplicate_entries(produced_data,identity_columns=['id','area']):
-            raise Exception(f"{output_directory}:: Duplicate entries were identified in the dataframe.")
+            display_message = f"{output_directory}:: Duplicate entries were identified in the dataframe."
+            logging.error(display_message)
+            raise Exception(display_message)
 
         if write_results:
             produced_data.repartition(1).write.mode('overwrite').csv(path=f'../output/{output_directory}', header=True)
 
+    except Exception as e:
+            logging.error(e)
+
     finally:
 
         spark.stop()
+        logging.debug(f"{output_directory}:: Spark session stopped.")
 
 
 if __name__ == "__main__":

@@ -3,6 +3,8 @@ import pyspark.sql.functions as F
 from pyspark import SparkConf
 import chispa
 from pyspark.sql.functions import column
+import logging
+import logging.config
 
 import importlib
 
@@ -16,7 +18,7 @@ def produce_data(spark_session,
     top_n: int = 3,
     ):
     """
-    Produces a csv listing the top selling products per department.
+    Produces a csv listing the top-selling products per department.
     :param spark_session: Spark builder object to handle stopping outside function.
     :param dataset_one_path: Path to dataset_one.csv
     :param dataset_two_path: Path to dataset_one.csv
@@ -61,6 +63,11 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
     :return: Writes csv in the output_directory if write_results is specified as True
     """
 
+    # Configure the logging system
+    logging.config.fileConfig(r'../utility/logconfig.ini')
+
+    logging.debug(f'{output_directory} : Starting log process')
+
     spark = SparkSession.builder.getOrCreate()
 
     try:
@@ -72,11 +79,17 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
             top_n=top_n
                                      )
 
+        logging.debug(f'{output_directory} : Successfuly extracted data')
+
         if test_for_non_logical_values(produced_data,column='total_products_sold',condition=f'total_products_sold<0'):
-            raise Exception(f"{output_directory}:: Negative values were identified in the dataframe.")
+            display_message = f"{output_directory}:: Negative values were identified in the dataframe."
+            logging.error(display_message)
+            raise Exception(display_message)
 
         if test_for_duplicate_entries(produced_data,identity_columns=['area','product_sold']):
-            raise Exception(f"{output_directory}:: Duplicate entries were identified in the dataframe.")
+            display_message = f"{output_directory}:: Duplicate entries were identified in the dataframe."
+            logging.error(display_message)
+            raise Exception(display_message)
 
         if write_results:
             produced_data.repartition(1).write.mode('overwrite').csv(path=f'../output/{output_directory}', header=True)
@@ -84,6 +97,7 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
     finally:
 
         spark.stop()
+        logging.debug(f"{output_directory}:: Spark session stopped.")
 
 
 if __name__ == "__main__":
