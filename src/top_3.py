@@ -19,11 +19,11 @@ def produce_data(spark_session,
     """
     Produces a csv listing the top performers per department, taking account the total sales and percentage of call success.
     :param spark_session: Spark builder object to handle stopping outside function.
-    :str dataset_one_path: Path to dataset_one.csv
-    :str dataset_two_path: Path to dataset_one.csv
-    :str dataset_three_path: Path to dataset_one.csv
-    :int top_n: Return top_n candidates per department (ex. top_n = 3 will return the top 3 performers and so on).
-    :float percentage_threshold: Lower threshold of successful calls that a caller should have made. Here 75 translates to 75%.
+    :param dataset_one_path: Path to dataset_one.csv
+    :param dataset_two_path: Path to dataset_one.csv
+    :param dataset_three_path: Path to dataset_one.csv
+    :param top_n: Return top_n candidates per department (ex. top_n = 3 will return the top 3 performers and so on).
+    :param percentage_threshold: Lower threshold of successful calls that a caller should have made. Here 75 translates to 75%.
     to be considered for a bonus.
     :return: produced_data: Spark DataFrame that will be written to a csv.
     """
@@ -92,7 +92,7 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
 
                                      )
 
-        if test_for_non_logical_values(produced_data,column='percentage_of_successful_calls',condition=f'percentage_of_successful_calls<{top_n}'):
+        if test_for_non_logical_values(produced_data,column='percentage_of_successful_calls',condition=f'percentage_of_successful_calls<{percentage_threshold}'):
             raise Exception(f"{output_directory}:: Negative values were identified in the dataframe.")
 
         if test_for_duplicate_entries(produced_data,identity_columns=['id','area']):
