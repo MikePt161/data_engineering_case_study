@@ -36,7 +36,11 @@ jobs:
       - name: Validate Databricks Asset Bundle
         run: |
           pwd
+          ls
           cd ../
+          pwd
+          ls -l databricks.yml
+          ls
           databricks bundle validate
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
