@@ -24,7 +24,7 @@ jobs:
         run: pwd
       
       - name: Run Flake8
-        run: flake8 ./
+        run: flake8 
         continue-on-error: true
 
       # Install dependencies (example for Python projects)
@@ -36,10 +36,6 @@ jobs:
       - name: Validate Databricks Asset Bundle
         run: |
           pwd
-          ls
-          cd ../
-          pwd
-          ls -l databricks.yml
           ls
           databricks bundle validate
         env:
