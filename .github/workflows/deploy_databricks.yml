@@ -20,6 +20,9 @@ jobs:
       - name: Install Flake8
         run: pip install flake8
 
+      - name: Get pwd
+        run: pwd
+      
       - name: Run Flake8
         run: flake8 ./
         continue-on-error: true
@@ -32,7 +35,8 @@ jobs:
 
       - name: Validate Databricks Asset Bundle
         run: |
-          cd ./
+          pwd
+          cd ../
           databricks bundle validate
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
