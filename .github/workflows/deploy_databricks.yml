@@ -17,6 +17,10 @@ jobs:
 
     # Steps for the build process
     steps:
+      # Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
       - name: Install Flake8
         run: pip install flake8
 
