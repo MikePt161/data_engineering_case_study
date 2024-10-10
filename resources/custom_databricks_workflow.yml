@@ -1,0 +1,50 @@
+resources:
+  jobs:
+    custom_databricks_workflow:
+
+      # schedule:
+      # # Every third of month
+      # quartz_cron_expression: '0 0 0 3 * ? *'
+      # timezone_id: Europe/Athens
+
+      # email_notifications:
+        # on_failure:
+#            - add_mail_here
+
+      tasks:
+        - task_key: run_best_salesperson
+          job_cluster_key: default_cluster
+          notebook_task:
+            notebook_path: ../src/best_salesperson.py
+            "base_parameters":
+              # Pass parameters within jobs and reference them with dbutils.widgets.get
+              "top_n": 1
+          libraries:
+            - pypi:
+                package: ""
+          max_retries: 0
+        - task_key: run_it_data
+          depends_on:
+            -task_key: run_best_salesperson
+          job_cluster_key: default_cluster
+          notebook_task:
+            notebook_path: ../src/best_salesperson.py
+          max_retries: 0
+
+      job_clusters:
+        - job_cluster_key: default_cluster
+          new_cluster:
+            # Utilise a 14.3 LTS cluster with python 3.10 and pyspark 3.5.0 installed
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "Standard_D4a_v4"
+            driver_node_type_id: "Standard_D4a_v4"
+            autoscale:
+              min_workers: 2
+              max_workers: 4
+            enable_elastic_disk: true
+            spark_conf:
+              spark.speculation: true
+              spark.databricks.delta.retentionDurationCheck.enabled: false
+
+
+
