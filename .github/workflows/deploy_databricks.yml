@@ -21,7 +21,7 @@ jobs:
         run: pip install flake8
 
       - name: Run Flake8
-        run: flake8 ../
+        run: flake8 ./
         continue-on-error: true
 
       # Install dependencies (example for Python projects)
@@ -32,6 +32,7 @@ jobs:
 
       - name: Validate Databricks Asset Bundle
         run: |
+          cd ./
           databricks bundle validate
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
@@ -40,6 +41,7 @@ jobs:
 
       - name: Deploy resources to Databricks
         run: |
+          cd ./
           databricks bundle deploy personal_databricks_workspace
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
