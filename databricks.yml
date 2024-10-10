@@ -1,0 +1,34 @@
+# Configuration file of databricks.yml as specified in:
+# https://docs.databricks.com/en/dev-tools/bundles/settings.html
+
+bundle:
+  name: data_engineering_case_study
+
+# Workflow files to include
+include:
+  - resources/*.yml
+
+# Exlude deployment file and obsolete files from deployed artifact
+sync:
+  exclude:
+    - archive/
+    - .github/
+
+# Targets are different Databricks workspaces (usually dev, staging, production)
+# in which CI/CD is performed.
+targets:
+  personal_databricks_workspace:
+    mode: production
+    default: true
+    workspace:
+      # Databricks domain, should be an env variable within the workspace
+      host: $(var.DATABRICKS_HOST)
+      # Deploy resources to this path
+      root_path: /Shared/.bundle/${bundle.name}
+    run_as:
+      # Run jobs as current user. Using a preset service principal is also
+      # available as an option
+      user_name: ${workspace.current_user.userName}
+
+
+
