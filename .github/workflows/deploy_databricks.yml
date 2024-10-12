@@ -37,14 +37,13 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
           databricks version
 
-      - name: Check directory
+      - name: Check vars
         run: |
-          ls -a
+          echo ${{ secrets.DATABRICKS_HOST}}
+          echo ${{ secrets.DATABRICKS_TOKEN}}
 
       - name: Validate Databricks Asset Bundle
         run: |
-          pwd
-          ls
           databricks bundle validate
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
@@ -53,7 +52,6 @@ jobs:
 
       - name: Deploy resources to Databricks
         run: |
-          cd ./
           databricks bundle deploy personal_databricks_workspace
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
