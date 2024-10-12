@@ -22,7 +22,7 @@ targets:
     default: true
     workspace:
       # Databricks domain, should be an env variable within the workspace
-      host: {{ env_var('DATABRICKS_HOST') }} # Azure Equivalent : $(var.DATABRICKS_HOST)
+      host: ${{ secrets.DATABRICKS_HOST }} # Azure Equivalent : $(var.DATABRICKS_HOST)
       # Deploy resources to this path
       root_path: /Shared/.bundle/${bundle.name}
     run_as:
