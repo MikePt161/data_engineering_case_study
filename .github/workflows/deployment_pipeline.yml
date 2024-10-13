@@ -1,0 +1,43 @@
+name: Deploy
+
+# Controls when the action will run
+on:
+  push:
+    branches:
+      - main 
+  workflow_run:
+    workflows: ["Build and Test"]
+    types:
+      - completed
+
+# Define the jobs that will run
+jobs:
+  build:
+    # The name of the runner
+    runs-on: ubuntu-latest
+
+    # Steps for the build process
+    steps:
+      # Checkout the code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Use creds method of verification between a created service principal.
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      
+      # Install dependencies (example for Python projects)
+      - name: Install Databricks CLI
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
+          databricks version
+
+      # Deploy to workspace
+      - name: Deploy resources to Databricks
+        run: |
+          databricks bundle deploy
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
