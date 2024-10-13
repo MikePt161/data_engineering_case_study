@@ -53,7 +53,9 @@ are used for authentication between the agent and the databricks workspace, by u
 The following workflow and artifacts are deployed as part of the deployment pipeline.
 
 Assets
+<br>
 !(./img/proof_of_deployment_assets.jpg)
+Workflow
 <br>
 !(./img/proof_of_deployment_workflow.jpg)
 
