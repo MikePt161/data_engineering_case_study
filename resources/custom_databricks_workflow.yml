@@ -2,6 +2,8 @@ resources:
   jobs:
     custom_databricks_workflow:
 
+    name: custom_databricks_workflow
+
       # schedule:
       # # Every third of month
       # quartz_cron_expression: '0 0 0 3 * ? *'
@@ -16,9 +18,6 @@ resources:
           job_cluster_key: default_cluster
           spark_python_task:
             python_file: ../src/best_salesperson.py
-            "base_parameters":
-              # Pass parameters within jobs and reference them with dbutils.widgets.get
-              "top_n": 1
           libraries:
             - pypi:
                 package: ""
