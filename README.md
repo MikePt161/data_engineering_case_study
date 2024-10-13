@@ -54,10 +54,10 @@ The following workflow and artifacts are deployed as part of the deployment pipe
 
 Assets
 <br>
-!(./img/proof_of_deployment_assets.jpg)
+!(img/proof_of_deployment_assets.jpg)
 Workflow
 <br>
-!(./img/proof_of_deployment_workflow.jpg)
+!(img/proof_of_deployment_workflow.jpg)
 
 
 
