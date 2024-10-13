@@ -37,7 +37,8 @@ databricks.yml : Databricks Asset Bundle configuration file. Used in the CI/CD d
 
 ## ETL description
 
-Each ETL script has the same outline. Within main(), the produce_data function is used to extract the wanted features and, if all checks are successful, write the data to the designated output/ folder.
+Each ETL script has the same outline. Within main(), the produce_data function is used to extract the wanted features and, if all checks are successful, write the data to the designated output/ folder. <br>
+A logger is also used to monitor the script behaviour.
 
 ## CI/CD with Databricks Asset Bundles
 
