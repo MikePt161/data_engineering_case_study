@@ -1,6 +1,7 @@
 resources:
   jobs:
     custom_databricks_workflow:
+      name: custom_databricks_workflow
 
       # schedule:
       # # Every third of month
@@ -14,21 +15,18 @@ resources:
       tasks:
         - task_key: run_best_salesperson
           job_cluster_key: default_cluster
-          notebook_task:
-            notebook_path: ../src/best_salesperson.py
-            "base_parameters":
-              # Pass parameters within jobs and reference them with dbutils.widgets.get
-              "top_n": 1
+          spark_python_task:
+            python_file: ../src/best_salesperson.py
           libraries:
             - pypi:
                 package: ""
           max_retries: 0
         - task_key: run_it_data
           depends_on:
-            -task_key: run_best_salesperson
+            - task_key: run_best_salesperson
           job_cluster_key: default_cluster
-          notebook_task:
-            notebook_path: ../src/best_salesperson.py
+          spark_python_task:
+            python_file: ../src/best_salesperson.py
           max_retries: 0
 
       job_clusters:
