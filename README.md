@@ -3,6 +3,7 @@
 ## Description
 
 The current repository serves as the produced output of the tasks demonstrated in the exercise.md file. Each script within the src/ folder is linked to a directory within the output/ folder with the same name.
+
 ## Setup
 
 To run this version the following requirements must be met on a local PC.
@@ -27,6 +28,21 @@ To run this version the following requirements must be met on a local PC.
 │   ├───marketing_address_info
 │   ├───top_3
 │   └───top_3_most_sold_per_department_netherlands
+├───resources : Databricks workflows specified in yml format. 
 ├───src : Source code, namely python scripts that produce extracted data, saved in the outputs/ folder.
 ├───utility: Test functions and logging configuration files.
+├───img: Files used in the readme.
+databricks.yml : Databricks Asset Bundle configuration file. Used in the CI/CD deployment process.
 ```
+
+## ETL description
+
+Each ETL script has the same outline. Within main(), the produce_data function is used to extract the wanted features and, if all checks are successful, write the data to the designated output/ folder.
+
+## CI/CD with Databricks Asset Bundles
+
+A test pipeline is initiated whenever a pull request is opened on the main branch. If the pull request is merged into main, a deployment pipeline is also initiated. <br>
+For the CI/CD process a service principal is used to authenticate with the Github Actions agent, by using the appropriate environment variables. <br>
+A personal Databricks workspace was used as a destination for the artifacts specified within the databricks.yml file. 
+
+
