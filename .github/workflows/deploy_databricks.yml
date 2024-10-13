@@ -4,7 +4,7 @@ name: Build and Test
 on:
   push:
     branches:
-      - fix_databricks_bundle_validate 
+      - main 
   pull_request:
     branches:
       - main
@@ -20,21 +20,18 @@ jobs:
       # Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v3
-      # 
-      # - name: Install Flake8
-      #   run: pip install flake8
+      - name: Install Flake8
+        run: pip install flake8
 
-      # - name: Run Flake8
-      #   run: flake8 
-      #   continue-on-error: true
+      - name: Run Flake8
+        run: flake8 
+        continue-on-error: true
 
+      # Use creds method of verification between a created service principal.
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      # - name: check
-      #   run: az account show
       
       # Install dependencies (example for Python projects)
       - name: Install Databricks CLI
@@ -42,6 +39,7 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
           databricks version
 
+      # Validate Databricks asset bundle 
       - name: Validate Databricks Asset Bundle
         run: |
           databricks bundle validate
@@ -49,7 +47,7 @@ jobs:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
-
+      # Deploy to workspace
       - name: Deploy resources to Databricks
         run: |
           databricks bundle deploy
