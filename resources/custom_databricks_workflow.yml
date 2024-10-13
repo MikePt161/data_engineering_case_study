@@ -19,7 +19,7 @@ resources:
             python_file: ../src/best_salesperson.py
           libraries:
             - pypi:
-                package: ""
+                package: "chispa==0.10.1"
           max_retries: 0
         - task_key: run_it_data
           depends_on:
