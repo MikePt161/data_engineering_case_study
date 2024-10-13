@@ -21,12 +21,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         
-      - name: Install Flake8
-        run: pip install flake8
+      # - name: Install Flake8
+      #   run: pip install flake8
 
-      - name: Run Flake8
-        run: flake8 
-        continue-on-error: true
+      # - name: Run Flake8
+      #   run: flake8 
+      #   continue-on-error: true
 
       - name: Azure Login
         uses: azure/login@v1
