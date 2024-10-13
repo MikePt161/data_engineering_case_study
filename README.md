@@ -1,8 +1,8 @@
-# data_engineering_case_study
+# Data Engineering Case Study
 
 ## Description
 
-The current exercise is an outline of the tasks demonstrated in the exercise.md file.
+The current repository serves as the produced output of the tasks demonstrated in the exercise.md file. Each script within the src/ folder is linked to a directory within the output/ folder with the same name.
 
 ## Setup
 
@@ -15,8 +15,49 @@ To run this version the following requirements must be met on a local PC.
 
 ## Project Outline
 
-data/ : Source csv files containing necessary provided data.
-output/ : Output csv files, containing extracted information per task.
-src/ : Source code used to generate the .csv files, broken down by output.
-utility/ : Custom made test functions in pyspark format.
-requirements.txt: Necessary dependencies to run the project.
+```bash
+├───.github 
+│   └───workflows : CI/CD build pipelines.
+├───archive : Archived documents.
+│   └───python : Archived / Non production ready python code.
+├───data : Source csv files containing necessary provided data.
+├───output : Hosts directories that include csv files, containing extracted data per task.
+│   ├───best_salesperson
+│   ├───department_breakdown
+│   ├───it_data
+│   ├───marketing_address_info
+│   ├───top_3
+│   └───top_3_most_sold_per_department_netherlands
+├───resources : Databricks workflows specified in yml format. 
+├───src : Source code, namely python scripts that produce extracted data, saved in the outputs/ folder.
+├───utility: Test functions and logging configuration files.
+├───img: Files used in the readme.
+databricks.yml : Databricks Asset Bundle configuration file. Used in the CI/CD deployment process.
+```
+
+## ETL description
+
+Each ETL script has the same outline. Within main(), the produce_data function is used to extract the wanted features and, if all checks are successful, write the data to the designated output/ folder. <br>
+A logger is also used to monitor the script behaviour.
+
+## CI/CD with Databricks Asset Bundles
+
+### Description
+A test pipeline is initiated whenever a pull request is opened on the main branch. If the pull request is merged into main, a deployment pipeline is also initiated. <br>
+For the CI/CD process an Azure service principal is used to authenticate with the Github Actions agent, by using the appropriate environment variables. <br>
+A personal Databricks workspace was used as a destination for the artifacts specified within the databricks.yml file. The appropriate environment variables ```DATABRICKS_HOST``` and ```DATABRICKS_TOKEN```
+are used for authentication between the agent and the databricks workspace, by using the Databricks CLI. <br>
+
+### Proof of deployment
+
+The following workflow and artifacts are deployed as part of the deployment pipeline.
+
+Assets
+<br>
+!(./img/proof_of_deployment_assets.jpg)
+Workflow
+<br>
+!(./img/proof_of_deployment_workflow.jpg)
+
+
+
