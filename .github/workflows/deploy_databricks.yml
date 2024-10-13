@@ -52,7 +52,7 @@ jobs:
 
       - name: Deploy resources to Databricks
         run: |
-          databricks bundle deploy personal_databricks_workspace
+          databricks bundle deploy
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
