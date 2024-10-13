@@ -33,6 +33,9 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: check
+        run: az account show
+      
       # Install dependencies (example for Python projects)
       - name: Install Databricks CLI
         run: |
