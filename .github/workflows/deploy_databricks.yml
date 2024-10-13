@@ -2,16 +2,13 @@ name: Build and Test
 
 # Controls when the action will run
 on:
-  push:
-    branches:
-      - main 
   pull_request:
     branches:
       - main
 
 # Define the jobs that will run
 jobs:
-  build:
+  test:
     # The name of the runner
     runs-on: ubuntu-latest
 
@@ -20,6 +17,7 @@ jobs:
       # Checkout the code from the repository
       - name: Checkout code
         uses: actions/checkout@v3
+        
       - name: Install Flake8
         run: pip install flake8
 
@@ -43,14 +41,6 @@ jobs:
       - name: Validate Databricks Asset Bundle
         run: |
           databricks bundle validate
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-
-      # Deploy to workspace
-      - name: Deploy resources to Databricks
-        run: |
-          databricks bundle deploy
         env:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
