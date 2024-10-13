@@ -14,7 +14,7 @@ resources:
       tasks:
         - task_key: run_best_salesperson
           job_cluster_key: default_cluster
-          python_task:
+          spark_python_task:
             python_file: ../src/best_salesperson.py
             "base_parameters":
               # Pass parameters within jobs and reference them with dbutils.widgets.get
@@ -27,7 +27,7 @@ resources:
           depends_on:
             - task_key: run_best_salesperson
           job_cluster_key: default_cluster
-          python_task:
+          spark_python_task:
             python_file: ../src/best_salesperson.py
           max_retries: 0
 
