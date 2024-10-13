@@ -5,6 +5,10 @@ on:
   push:
     branches:
       - main 
+  workflow_run:
+    workflows: ["Build and Test"]
+    types:
+      - completed
 
 # Define the jobs that will run
 jobs:
