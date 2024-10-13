@@ -24,23 +24,20 @@ jobs:
       - name: Install Flake8
         run: pip install flake8
 
-      - name: Get pwd
-        run: pwd
-      
       - name: Run Flake8
         run: flake8 
         continue-on-error: true
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       # Install dependencies (example for Python projects)
       - name: Install Databricks CLI
         run: |
           curl -fsSL https://raw.githubusercontent.com/databricks/setup-cli/main/install.sh | sh
           databricks version
-
-      - name: Check vars
-        run: |
-          echo ${{ secrets.DATABRICKS_HOST}}
-          echo ${{ secrets.DATABRICKS_TOKEN}}
 
       - name: Validate Databricks Asset Bundle
         run: |
