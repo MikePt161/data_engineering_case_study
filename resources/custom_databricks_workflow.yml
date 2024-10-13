@@ -1,8 +1,7 @@
 resources:
   jobs:
     custom_databricks_workflow:
-
-    name: custom_databricks_workflow
+      name: custom_databricks_workflow
 
       # schedule:
       # # Every third of month
