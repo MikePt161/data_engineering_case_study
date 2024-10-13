@@ -41,8 +41,20 @@ Each ETL script has the same outline. Within main(), the produce_data function i
 
 ## CI/CD with Databricks Asset Bundles
 
+### Description
 A test pipeline is initiated whenever a pull request is opened on the main branch. If the pull request is merged into main, a deployment pipeline is also initiated. <br>
-For the CI/CD process a service principal is used to authenticate with the Github Actions agent, by using the appropriate environment variables. <br>
-A personal Databricks workspace was used as a destination for the artifacts specified within the databricks.yml file. 
+For the CI/CD process an Azure service principal is used to authenticate with the Github Actions agent, by using the appropriate environment variables. <br>
+A personal Databricks workspace was used as a destination for the artifacts specified within the databricks.yml file. The appropriate environment variables ```DATABRICKS_HOST``` and ```DATABRICKS_TOKEN```
+are used for authentication between the agent and the databricks workspace, by using the Databricks CLI. <br>
+
+### Proof of deployment
+
+The following workflow and artifacts are deployed as part of the deployment pipeline.
+
+Assets
+!(./img/proof_of_deployment_assets.jpg)
+<br>
+!(./img/proof_of_deployment_workflow.jpg)
+
 
 
