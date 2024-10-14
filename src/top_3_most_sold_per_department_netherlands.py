@@ -46,6 +46,8 @@ def produce_data(spark_session,
     # Filter for top_n in each partition
     produced_data = produced_data.filter(F.col("rank") <= top_n).drop(F.col('rank'))
 
+    assert produced_data.count() > 0, "Produced Dataframe must not be empty"
+
     return produced_data
 
 
@@ -93,6 +95,10 @@ def main(dataset_one_path: str = r'../data/dataset_one.csv',
 
         if write_results:
             produced_data.repartition(1).write.mode('overwrite').csv(path=f'../output/{output_directory}', header=True)
+
+    except Exception as e:
+
+        logging.error(e)
 
     finally:
 
