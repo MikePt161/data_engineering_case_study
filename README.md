@@ -29,10 +29,13 @@ To run this version the following requirements must be met on a local PC.
 │   ├───top_3
 │   └───top_3_most_sold_per_department_netherlands
 ├───resources : Databricks workflows specified in yml format. 
-├───src : Source code, namely python scripts that produce extracted data, saved in the outputs/ folder.
+├───src : Source code, namely python scripts that produce extracted data, saved in the outputs/ folder. 
+│   ├───sales_data : Packaged application. 
 ├───utility: Test functions and logging configuration files.
 ├───img: Files used in the readme.
 databricks.yml : Databricks Asset Bundle configuration file. Used in the CI/CD deployment process.
+setup.py: File specifying the build process.
+pyproject.toml: File specifying the tools needed to setup application sales-data.
 ```
 
 ## ETL description
@@ -59,5 +62,8 @@ Workflow
 <br>
 ![Workflow](img/proof_of_deployment_workflow.jpg)
 
+## Entry point - Setup
+Within the folder src/sales_data all the following functions are be packaged as a standalone application. <br>
+The end user can use the distribution produced by the setup.py and run commands on the terminal to produce the wanted output. <br>
 
 
