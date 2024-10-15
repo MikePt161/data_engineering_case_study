@@ -9,8 +9,10 @@ import logging.config
 import importlib
 
 import utility.test_functions
+
 importlib.reload(utility.test_functions)
 from utility.test_functions import *
+
 
 def produce_data(dataset_one_path, dataset_two_path, spark_session):
     """
@@ -21,27 +23,40 @@ def produce_data(dataset_one_path, dataset_two_path, spark_session):
     :return: Spark DataFrame that will be written to a csv.
     """
 
-    dataset_one = spark_session.read.csv(dataset_one_path, header=True, inferSchema=True)
-    dataset_two = spark_session.read.csv(dataset_two_path, header=True, inferSchema=True)
+    dataset_one = spark_session.read.csv(
+        dataset_one_path, header=True, inferSchema=True
+    )
+    dataset_two = spark_session.read.csv(
+        dataset_two_path, header=True, inferSchema=True
+    )
 
     # Filter data on the IT department and retrieve sales amount per caller
-    produced_data = (dataset_one.select("id", "area").
-               filter(F.col("area") == "IT").
-               join(dataset_two.select("id", "name", "address", "sales_amount"),
-                    [dataset_one.id == dataset_two.id],
-                    "left"
-                    )).drop(dataset_two.id).orderBy("sales_amount", ascending=[False]).limit(100)
+    produced_data = (
+        (
+            dataset_one.select("id", "area")
+            .filter(F.col("area") == "IT")
+            .join(
+                dataset_two.select("id", "name", "address", "sales_amount"),
+                [dataset_one.id == dataset_two.id],
+                "left",
+            )
+        )
+        .drop(dataset_two.id)
+        .orderBy("sales_amount", ascending=[False])
+        .limit(100)
+    )
 
     assert produced_data.count() > 0, "Produced Dataframe must not be empty"
 
     return produced_data
 
 
-def main(dataset_one_path = r'../data/dataset_one.csv',
-         dataset_two_path = r'../data/dataset_two.csv',
-         output_directory='it_data',
-         write_results=True
-         ):
+def main(
+    dataset_one_path=r"../data/dataset_one.csv",
+    dataset_two_path=r"../data/dataset_two.csv",
+    output_directory="it_data",
+    write_results=True,
+):
     """
     :param dataset_one_path: Path to dataset_one.csv
     :param dataset_two_path: Path to dataset_two.csv
@@ -51,34 +66,40 @@ def main(dataset_one_path = r'../data/dataset_one.csv',
     """
 
     # Configure the logging system
-    logging.config.fileConfig(r'../utility/logconfig.ini')
+    logging.config.fileConfig(r"../utility/logconfig.ini")
 
-    logging.debug(f'{output_directory} : Starting log process')
+    logging.debug(f"{output_directory} : Starting log process")
 
     spark = SparkSession.builder.getOrCreate()
 
     try:
 
-        produced_data = produce_data(dataset_one_path, dataset_two_path, spark_session=spark)
+        produced_data = produce_data(
+            dataset_one_path, dataset_two_path, spark_session=spark
+        )
 
-        logging.debug(f'{output_directory} : Successfuly extracted data')
+        logging.debug(f"{output_directory} : Successfuly extracted data")
 
-        if test_for_non_logical_values(produced_data,column='sales_amount',condition='sales_amount<0'):
+        if test_for_non_logical_values(
+            produced_data, column="sales_amount", condition="sales_amount<0"
+        ):
             display_message = f"{output_directory}:: Negative values were identified in the dataframe."
             logging.error(display_message)
             raise Exception(display_message)
 
-        if test_for_duplicate_entries(produced_data,identity_columns=['id']):
+        if test_for_duplicate_entries(produced_data, identity_columns=["id"]):
             display_message = f"{output_directory}:: Duplicate entries were identified in the dataframe."
             logging.error(display_message)
             raise Exception(display_message)
 
         if write_results:
-            produced_data.repartition(1).write.mode('overwrite').csv(path=f'../output/{output_directory}', header=True)
+            produced_data.repartition(1).write.mode("overwrite").csv(
+                path=f"../output/{output_directory}", header=True
+            )
 
     except Exception as e:
-            logging.error(e)
-            logging.debug(f"{output_directory}:: Spark session stopped.")
+        logging.error(e)
+        logging.debug(f"{output_directory}:: Spark session stopped.")
 
     finally:
 
