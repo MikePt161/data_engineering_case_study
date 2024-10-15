@@ -69,6 +69,8 @@ def produce_data(spark_session,
     # Filter for top_n in each partition
     produced_data = produced_data.filter(F.col("rank") <= top_n).drop(F.col('rank'))
 
+    assert produced_data.count() > 0, "Produced Dataframe must not be empty"
+
     return produced_data
 
 

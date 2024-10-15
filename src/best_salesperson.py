@@ -46,6 +46,8 @@ def produce_data(spark_session,
                                        [produced_data.caller_id == dataset_two.id],
                                        'inner').drop(dataset_two.id)
 
+    assert produced_data.count() > 0, "Produced Dataframe must not be empty"
+
     return produced_data
 
 

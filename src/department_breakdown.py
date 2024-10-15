@@ -49,6 +49,8 @@ def produce_data(dataset_one_path:str, dataset_two_path:str, spark_session):
                                                            'left')
                                  .drop(sales_per_department.area))
 
+    assert produced_data.count() > 0, "Produced Dataframe must not be empty"
+
     return produced_data
 
 

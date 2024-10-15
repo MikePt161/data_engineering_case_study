@@ -40,6 +40,8 @@ def produce_data(dataset_one_path:str, dataset_two_path:str, spark_session):
         "left"
     )).drop(dataset_two.id).withColumn("zip_code", F.regexp_extract(F.col("address"), zip_code_regex, 1))
 
+    assert produced_data.count() > 0, "Produced Dataframe must not be empty"
+
     return produced_data
 
 

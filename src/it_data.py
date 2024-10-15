@@ -32,7 +32,7 @@ def produce_data(dataset_one_path, dataset_two_path, spark_session):
                     "left"
                     )).drop(dataset_two.id).orderBy("sales_amount", ascending=[False]).limit(100)
 
-    # spark.stop()
+    assert produced_data.count() > 0, "Produced Dataframe must not be empty"
 
     return produced_data
 
